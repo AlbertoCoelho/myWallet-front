@@ -11,16 +11,6 @@ import { makeSignUp } from '../../services/api';
 
 import { Wrapper,Container,Logo,StyledLink } from "./style";
 
-const validationSchema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  email: yup.string().required('Email is required'),
-  password: yup.string().required('Password is required'),
-  passwordConfirmation: 
-    yup.string()
-    .required('Password confirmation is required')
-    .oneOf([yup.ref('password')], 'Passwords must match'),
-});
-
 const SignUp = () => {
   const [ formData, setFormData ] = useState({
     name:"",
@@ -28,28 +18,28 @@ const SignUp = () => {
     password:"",
     passwordConfirmation:""
   });
-
   const [isLoading, setIsLoading] = useState( {placeholder: "Cadastrar", disabled: false} );
+  const [status,setStatus] = useState( {message: ''} );
+
   const navigate = useNavigate();
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
+  //Vai colocar tudo que já tem de formData, atualizar uma propriedade que tiver o nome de e.target.name que terá o valor e.target.value 
+  const handleInputChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    validationSchema
-      .isValid(formData)
-      .then((valid) => {
-        console.log("Valor válido:", valid);
-    });
+  //Enviar os dados para o back-end
+  const handleSignUp = async (e) => {
+    //Para não recarregar a página
+    e.preventDefault();
+    console.log(formData);
+
+    if(!(await validate())) return;
 
     isLoading.placeholder = <Loading height={100} width={100}/>
     isLoading.disabled = true;
     setIsLoading({...isLoading});
-  }
 
-  const signup = async () => {
     try {
-      const response = await makeSignUp({...formData});
-      console.log(response);
+      await makeSignUp({...formData});
       setIsLoading(false);
       navigate("/");
     } catch {
@@ -59,10 +49,37 @@ const SignUp = () => {
       setIsLoading({...isLoading});
     }
   }
-  signup();
 
-  function handleInputChange(e) {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+
+  //fix me: not working
+  async function validate(){
+    let validationSchema = yup.object().shape({
+      passwordConfirmation: yup.string('Password confirmation is required')
+      .oneOf([yup.ref('password'), null], 'Passwords must match')
+      .required('Password confirmation is required'),
+
+      password: yup.string('Password is required')
+      .min(3, 'Password must be at least 3 characters long!')
+      .max(30, 'Password must be a maximum of 3 characters')
+      .required('Password is required'),
+
+      email: yup.string('Email is required')
+      .required('Email is required'),
+
+      name: yup.string('Name is required')
+      .min(3, 'Your name is too short.')
+      .max(20, 'Your password is too long.')
+      .required('Name is required')
+    });
+
+    try {
+      await validationSchema.validate(formData)
+      return true;
+    } catch (err) {
+        setStatus({message: err.errors});
+        return false;
+    }
   }
 
   return (
@@ -98,7 +115,7 @@ const SignUp = () => {
             required
           />
           <Input 
-            type="text"
+            type="password"
             value={formData.passwordConfirmation}
             onChange={handleInputChange}
             name="passwordConfirmation"
