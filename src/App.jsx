@@ -3,6 +3,7 @@ import { useContext } from "react";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import CashIncome from "./pages/cashIncome";
 
 import GlobalStyle from "./styles/GlobalStyle";
 
@@ -27,6 +28,7 @@ const App = () => {
         <Routes>
           <Route exact path="/" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="cash-income" element={<Private> <CashIncome /> </Private>} />
         </Routes>
         <GlobalStyle />
       </AuthProvider>

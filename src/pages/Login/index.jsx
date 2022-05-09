@@ -44,7 +44,7 @@ const Login = () => {
             disabled={isLoading.disabled && "disabled"}
             required
           />
-          <Input height={58}
+          <Input
             type="password"
             value={formData.password}
             onChange={handleInputChange}
