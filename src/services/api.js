@@ -9,5 +9,6 @@ export const makeSignUp = async (formData) => {
 }
 
 export const makeLogin = async (formData) => {
-  return api.post("/sign-in",formData)
+  const token = await api.post("/",formData);
+  return token;
 }

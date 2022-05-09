@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+// import * as yup from 'yup';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ const SignUp = () => {
     passwordConfirmation:""
   });
   const [isLoading, setIsLoading] = useState( {placeholder: "Cadastrar", disabled: false} );
-  const [status,setStatus] = useState( {message: ''} );
+  // const [status,setStatus] = useState( {message: ''} );
 
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const SignUp = () => {
     e.preventDefault();
     console.log(formData);
 
-    if(!(await validate())) return;
+    // if(!(await validate())) return;
 
     isLoading.placeholder = <Loading height={100} width={100}/>
     isLoading.disabled = true;
@@ -43,44 +43,44 @@ const SignUp = () => {
       setIsLoading(false);
       navigate("/");
     } catch {
-      alert("Please fill in the data correctly");
-      isLoading.placeholder = "Cadastrar";
-      isLoading.disabled = false;
-      setIsLoading({...isLoading});
+        alert("Please fill in the data correctly");
+        isLoading.placeholder = "Cadastrar";
+        isLoading.disabled = false;
+        setIsLoading({...isLoading});
     }
   }
 
 
 
   //fix me: not working
-  async function validate(){
-    let validationSchema = yup.object().shape({
-      passwordConfirmation: yup.string('Password confirmation is required')
-      .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required('Password confirmation is required'),
+  // async function validate(){
+  //   let validationSchema = yup.object().shape({
+  //     passwordConfirmation: yup.string('Password confirmation is required')
+  //     .oneOf([yup.ref('password'), null], 'Passwords must match')
+  //     .required('Password confirmation is required'),
 
-      password: yup.string('Password is required')
-      .min(3, 'Password must be at least 3 characters long!')
-      .max(30, 'Password must be a maximum of 3 characters')
-      .required('Password is required'),
+  //     password: yup.string('Password is required')
+  //     .min(3, 'Password must be at least 3 characters long!')
+  //     .max(30, 'Password must be a maximum of 3 characters')
+  //     .required('Password is required'),
 
-      email: yup.string('Email is required')
-      .required('Email is required'),
+  //     email: yup.string('Email is required')
+  //     .required('Email is required'),
 
-      name: yup.string('Name is required')
-      .min(3, 'Your name is too short.')
-      .max(20, 'Your password is too long.')
-      .required('Name is required')
-    });
+  //     name: yup.string('Name is required')
+  //     .min(3, 'Your name is too short.')
+  //     .max(20, 'Your password is too long.')
+  //     .required('Name is required')
+  //   });
 
-    try {
-      await validationSchema.validate(formData)
-      return true;
-    } catch (err) {
-        setStatus({message: err.errors});
-        return false;
-    }
-  }
+  //   try {
+  //     await validationSchema.validate(formData)
+  //     return true;
+  //   } catch (err) {
+  //       setStatus({message: err.errors});
+  //       return false;
+  //   }
+  // }
 
   return (
     <Wrapper>

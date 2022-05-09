@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Loading from "../../components/Loading";
 
 import { Wrapper,Container,Logo,StyledLink } from "./style";
+
+import { AuthContext } from '../../contexts/auth';
 
 const Login = () => {
 
@@ -13,9 +15,12 @@ const Login = () => {
     password:""
   });
   const [isLoading, setIsLoading] = useState( {placeholder: "Entrar", disabled: false} );
+  const { login } = useContext(AuthContext);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
+    login(formData.email,formData.password,isLoading,setIsLoading);
 
     isLoading.placeholder = <Loading height={100} width={100} />
     isLoading.disabled = true;
@@ -23,9 +28,7 @@ const Login = () => {
   }
 
 
-  function handleInputChange(e) {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const handleInputChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   return (
     <Wrapper>
@@ -54,7 +57,7 @@ const Login = () => {
             {isLoading.placeholder}
           </Button>
         </form>
-        <StyledLink to="/signup">Primeira vez? Cadastre-se!</StyledLink>
+        <StyledLink to="/sign-up">Primeira vez? Cadastre-se!</StyledLink>
       </Container>
     </Wrapper>
   );
